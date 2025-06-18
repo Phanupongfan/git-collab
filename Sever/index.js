@@ -49,33 +49,33 @@
 
   {
     "id": 7,
-    "name": "Product 7",
-    "price": 110,
-    "image": "https://example.com/images/product1.jpg",
+    "name": "D-BT-04-1",
+    "price": 190,
+    "image": "https://www.thaivanguard.net/wp-content/uploads/2025/02/MOCK_VGD_BT04_1.5.png",
     "description": "This is a detailed description for Product 1."
   },
 
   {
     "id": 8,
-    "name": "Product 8",
-    "price": 110,
-    "image": "https://example.com/images/product1.jpg",
+    "name": "D-04-2",
+    "price": 150,
+    "image": "https://www.thaivanguard.net/wp-content/uploads/2025/02/MOCK_VGD_BT04_2.5.png",
     "description": "This is a detailed description for Product 1."
   },
 
   {
     "id": 9,
-    "name": "Product 9",
-    "price": 110,
-    "image": "https://example.com/images/product1.jpg",
+    "name": "D-BT-05-1",
+    "price": 190,
+    "image": "https://www.thaivanguard.net/wp-content/uploads/2025/06/MOCK_VGD_BT05_1-1024x842.png",
     "description": "This is a detailed description for Product 1."
   },
 
   {
     "id": 10,
-    "name": "Product 10",
-    "price": 110,
-    "image": "https://example.com/images/product1.jpg",
+    "name": "D-BT05-2",
+    "price": 150,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQU6QRXueFO6veqppdpHjifawmYlju0mFNWA&s",
     "description": "This is a detailed description for Product 1."
   },  
 ]
