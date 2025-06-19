@@ -1,32 +1,236 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>เว็บไซต์ตัวอย่าง</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechShop - สินค้าคุณภาพ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .product-card h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .product-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
+        }
+        
+        .contact {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+        
+        .contact h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .contact p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
-  <header class="bg-white shadow p-4">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-      <h1 class="text-xl font-bold">ชื่อเว็บไซต์</h1>
-      <nav class="space-x-4">
-        <a href="#" class="text-gray-600 hover:text-blue-600">หน้าแรก</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">เกี่ยวกับ</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">ติดต่อ</a>
-      </nav>
+<body>
+    <div class="container">
+        <header>
+            <h1>TechShop</h1>
+            <p>สินค้าคุณภาพ ราคาดี ส่งฟรีทั่วไทย</p>
+        </header>
+        
+        <div class="products">
+            <div class="product-card">
+                <div class="product-image">📱</div>
+                <h3>สมาร์ทโฟน รุ่นใหม่</h3>
+                <p>หน้าจอ OLED ความละเอียดสูง กล้องคมชัด 108MP แบตเตอรี่ทนทาน พร้อมชาร์จไร้สาย</p>
+                <div class="price">฿15,990</div>
+                <button class="btn" onclick="buyProduct('สมาร์ทโฟน')">สั่งซื้อเลย</button>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-image">💻</div>
+                <h3>โน๊ตบุ๊คเกมมิ่ง</h3>
+                <p>CPU ความเร็วสูง การ์ดจอแรง RAM 16GB SSD 512GB เหมาะสำหรับเกมและงานหนัก</p>
+                <div class="price">฿35,990</div>
+                <button class="btn" onclick="buyProduct('โน๊ตบุ๊ค')">สั่งซื้อเลย</button>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-image">🎧</div>
+                <h3>หูฟังไร้สาย Pro</h3>
+                <p>เสียงคุณภาพ Hi-Fi ตัดเสียงรบกวน เชื่อมต่อ Bluetooth 5.0 แบตเตอรี่ 30 ชั่วโมง</p>
+                <div class="price">฿4,590</div>
+                <button class="btn" onclick="buyProduct('หูฟัง')">สั่งซื้อเลย</button>
+            </div>
+        </div>
+        
+        <div class="contact">
+            <h2>ติดต่อสั่งซื้อ</h2>
+            <p>📞 โทร: 02-xxx-xxxx</p>
+            <p>📱 Line: @techshop</p>
+            <p>📧 Email: info@techshop.com</p>
+            <p>🚚 ส่งฟรีทั่วไทย สั่งวันนี้ส่งวันถัดไป!</p>
+        </div>
     </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto p-6">
-    <section class="bg-white p-6 rounded-lg shadow">
-      <h2 class="text-2xl font-semibold mb-4">ยินดีต้อนรับ!</h2>
-      <p class="text-gray-700">นี่คือตัวอย่างหน้าเว็บที่ออกแบบด้วย Tailwind CSS</p>
-    </section>
-  </main>
-
-  <footer class="bg-white mt-10 p-4 text-center text-sm text-gray-500">
-    © 2025 เว็บไซต์ตัวอย่าง. สงวนลิขสิทธิ์.
-  </footer>
+    
+    <script>
+        function buyProduct(productName) {
+            alert(`ขอบคุณที่สนใจ ${productName}! กรุณาติดต่อเราผ่านช่องทางที่ระบุด้านล่างเพื่อสั่งซื้อ`);
+        }
+        
+        // เพิ่มเอฟเฟกต์การ์ดลอยขึ้นลงเบาๆ
+        document.querySelectorAll('.product-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.2}s`;
+        });
+    </script>
 </body>
 </html>
