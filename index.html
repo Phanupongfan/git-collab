@@ -1,32 +1,209 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>เว็บไซต์ตัวอย่าง</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanguard Card Manager</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
-  <header class="bg-white shadow p-4">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-      <h1 class="text-xl font-bold">ชื่อเว็บไซต์</h1>
-      <nav class="space-x-4">
-        <a href="#" class="text-gray-600 hover:text-blue-600">หน้าแรก</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">เกี่ยวกับ</a>
-        <a href="#" class="text-gray-600 hover:text-blue-600">ติดต่อ</a>
-      </nav>
+<body>
+    <h1>Vanguard Card Manager</h1>
+    
+    <!-- Add New Card Form -->
+    <div>
+        <h2>Add New Card</h2>
+        <input type="text" id="cardName" placeholder="Card Name">
+        <input type="number" id="cardPrice" placeholder="Price">
+        <input type="text" id="cardImage" placeholder="Image URL">
+        <input type="text" id="cardDescription" placeholder="Description">
+        <button onclick="addCard()">Add Card</button>
     </div>
-  </header>
 
-  <main class="max-w-6xl mx-auto p-6">
-    <section class="bg-white p-6 rounded-lg shadow">
-      <h2 class="text-2xl font-semibold mb-4">ยินดีต้อนรับ!</h2>
-      <p class="text-gray-700">นี่คือตัวอย่างหน้าเว็บที่ออกแบบด้วย Tailwind CSS</p>
-    </section>
-  </main>
+    <!-- Update Card Form -->
+    <div>
+        <h2>Update Card</h2>
+        <input type="number" id="updateId" placeholder="Card ID">
+        <input type="text" id="updateName" placeholder="New Name">
+        <input type="number" id="updatePrice" placeholder="New Price">
+        <input type="text" id="updateImage" placeholder="New Image URL">
+        <input type="text" id="updateDescription" placeholder="New Description">
+        <button onclick="updateCard()">Update Card</button>
+    </div>
 
-  <footer class="bg-white mt-10 p-4 text-center text-sm text-gray-500">
-    © 2025 เว็บไซต์ตัวอย่าง. สงวนลิขสิทธิ์.
-  </footer>
+    <!-- Get Single Card -->
+    <div>
+        <h2>Get Card by ID</h2>
+        <input type="number" id="getCardId" placeholder="Card ID">
+        <button onclick="getCard()">Get Card</button>
+        <div id="singleCardResult"></div>
+    </div>
+
+    <!-- Delete Card -->
+    <div>
+        <h2>Delete Card</h2>
+        <input type="number" id="deleteId" placeholder="Card ID">
+        <button onclick="deleteCard()">Delete Card</button>
+    </div>
+
+    <!-- Display All Cards -->
+    <div>
+        <h2>All Cards</h2>
+        <button onclick="getAllCards()">Refresh Cards</button>
+        <div id="cardsContainer"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3003';
+
+        // GET all cards
+        async function getAllCards() {
+            try {
+                const response = await axios.get(`${API_BASE}/cards`);
+                const cards = response.data;
+                
+                const container = document.getElementById('cardsContainer');
+                container.innerHTML = cards.map(card => `
+                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+                        <h3>ID: ${card.id} - ${card.name}</h3>
+                        <p>Price: ${card.price} บาท</p>
+                        <p>Description: ${card.description}</p>
+                        <img src="${card.image}" alt="${card.name}" style="width: 100px; height: auto;">
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching cards:', error);
+                alert('Error fetching cards');
+            }
+        }
+
+        // GET single card
+        async function getCard() {
+            const id = document.getElementById('getCardId').value;
+            if (!id) {
+                alert('Please enter card ID');
+                return;
+            }
+
+            try {
+                const response = await axios.get(`${API_BASE}/cards/${id}`);
+                const card = response.data;
+                
+                document.getElementById('singleCardResult').innerHTML = `
+                    <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+                        <h3>ID: ${card.id} - ${card.name}</h3>
+                        <p>Price: ${card.price} บาท</p>
+                        <p>Description: ${card.description}</p>
+                        <img src="${card.image}" alt="${card.name}" style="width: 100px; height: auto;">
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error fetching card:', error);
+                alert('Card not found');
+            }
+        }
+
+        // POST - Add new card
+        async function addCard() {
+            const name = document.getElementById('cardName').value;
+            const price = document.getElementById('cardPrice').value;
+            const image = document.getElementById('cardImage').value;
+            const description = document.getElementById('cardDescription').value;
+
+            if (!name || !price || !image || !description) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            try {
+                const response = await axios.post(`${API_BASE}/cards`, {
+                    name,
+                    price: parseInt(price),
+                    image,
+                    description
+                });
+                
+                alert('Card added successfully!');
+                // Clear form
+                document.getElementById('cardName').value = '';
+                document.getElementById('cardPrice').value = '';
+                document.getElementById('cardImage').value = '';
+                document.getElementById('cardDescription').value = '';
+                
+                // Refresh cards list
+                getAllCards();
+            } catch (error) {
+                console.error('Error adding card:', error);
+                alert('Error adding card');
+            }
+        }
+
+        // PUT - Update card
+        async function updateCard() {
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const price = document.getElementById('updatePrice').value;
+            const image = document.getElementById('updateImage').value;
+            const description = document.getElementById('updateDescription').value;
+
+            if (!id) {
+                alert('Please enter card ID');
+                return;
+            }
+
+            const updateData = {};
+            if (name) updateData.name = name;
+            if (price) updateData.price = parseInt(price);
+            if (image) updateData.image = image;
+            if (description) updateData.description = description;
+
+            try {
+                const response = await axios.put(`${API_BASE}/cards/${id}`, updateData);
+                alert('Card updated successfully!');
+                
+                // Clear form
+                document.getElementById('updateId').value = '';
+                document.getElementById('updateName').value = '';
+                document.getElementById('updatePrice').value = '';
+                document.getElementById('updateImage').value = '';
+                document.getElementById('updateDescription').value = '';
+                
+                // Refresh cards list
+                getAllCards();
+            } catch (error) {
+                console.error('Error updating card:', error);
+                alert('Error updating card');
+            }
+        }
+
+        // DELETE card
+        async function deleteCard() {
+            const id = document.getElementById('deleteId').value;
+            if (!id) {
+                alert('Please enter card ID');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this card?')) {
+                return;
+            }
+
+            try {
+                const response = await axios.delete(`${API_BASE}/cards/${id}`);
+                alert('Card deleted successfully!');
+                document.getElementById('deleteId').value = '';
+                
+                // Refresh cards list
+                getAllCards();
+            } catch (error) {
+                console.error('Error deleting card:', error);
+                alert('Error deleting card');
+            }
+        }
+
+        // Load all cards when page loads
+        window.onload = function() {
+            getAllCards();
+        };
+    </script>
 </body>
 </html>
