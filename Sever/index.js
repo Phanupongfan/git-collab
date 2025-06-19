@@ -13,7 +13,7 @@ let cards = [
     name: "D-BT01-1",
     price: 190,
     image:
-      "https://www.thaivanguard.net/wp-content/uploads/2024/07/MOCK_VGD_BT01-1-1024x864.png",
+      "https://down-th.img.susercontent.com/file/th-11134207-7r98v-ly3l01ztsi4i18",
     description: "Nation/Clan : Dragon Empire, Keter Sanctuary, Stoicheia",
   },
 
@@ -22,7 +22,7 @@ let cards = [
     name: "D-BT-01-2",
     price: 150,
     image:
-      "https://www.thaivanguard.net/wp-content/uploads/2024/07/MOCK_VGD_BT01-2-1024x868.png",
+      "https://laz-img-sg.alicdn.com/p/61f872be0d7bf4b1d7e63d9d2b8ee2c0.jpg",
     description: "Nation/Clan : Brandt Gate, Dark States",
   },
 
@@ -67,7 +67,7 @@ let cards = [
     name: "D-BT-04-1",
     price: 190,
     image:
-      "https://www.thaivanguard.net/wp-content/uploads/2025/02/MOCK_VGD_BT04_1.5.png",
+      "https://www.kidzandkai.com/wp-content/uploads/2025/02/kidkai.Vanguard-%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B9%81%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B8%94%E0%B8%B5-BT04-1-Awakening-of-Chakrabarthi-%E0%B9%80%E0%B8%99%E0%B8%8A%E0%B8%B1%E0%B9%88%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%AD%E0%B8%94%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B9%89%E0%B8%AD%E0%B8%99%E0%B9%80%E0%B8%AD%E0%B8%A1%E0%B9%84%E0%B8%9E%E0%B8%A3%E0%B9%8C.jpg",
     description: "Nation/Clan : Dark States, Dragon Empire, Stoicheia",
   },
 
@@ -76,7 +76,7 @@ let cards = [
     name: "D-04-2",
     price: 150,
     image:
-      "https://www.thaivanguard.net/wp-content/uploads/2025/02/MOCK_VGD_BT04_2.5.png",
+      "https://www.kidzandkai.com/wp-content/uploads/2025/02/kidkai.Vanguard-%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B9%81%E0%B8%A7%E0%B8%99%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%94%E0%B8%94%E0%B8%B5-BT04-2-Awakening-of-Chakrabarthi-%E0%B9%80%E0%B8%99%E0%B8%8A%E0%B8%B1%E0%B9%88%E0%B8%99%E0%B8%84%E0%B8%B7%E0%B8%AD%E0%B8%9A%E0%B8%A3%E0%B8%B1%E0%B8%99%E0%B8%97%E0%B9%8C%E0%B9%80%E0%B8%81%E0%B8%95-%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B9%80%E0%B8%84%E0%B9%80%E0%B8%97%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%81%E0%B8%8B%E0%B8%87%E0%B8%84%E0%B9%8C%E0%B8%97%E0%B8%B1%E0%B8%A7%E0%B8%A3%E0%B8%B5.jpg",
     description: "Nation/Clan : Brandt Gate, Keter Sanctuary",
   },
 
@@ -85,7 +85,7 @@ let cards = [
     name: "D-BT-05-1",
     price: 190,
     image:
-      "https://www.thaivanguard.net/wp-content/uploads/2025/06/MOCK_VGD_BT05_1-1024x842.png",
+      "https://kidzandkitz.co.th/acard/wp-content/uploads/sites/2/2025/03/VG-D-BT05-1-2.png",
     description:
       "Nation/Clan : Brandt Gate, Dark States, Dragon Empire, Keter Sanctuary",
   },
