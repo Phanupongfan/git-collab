@@ -1,236 +1,240 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechShop - สินค้าคุณภาพ</title>
+    <title>Card API Client</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-        
-        header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: fadeInDown 1s ease-out;
-        }
-        
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-        
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-        
-        .product-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.8s ease-out;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        
-        .product-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .product-card h3 {
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-        
-        .product-card p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .price {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-        
-        .btn {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            background: linear-gradient(45deg, #ee5a24, #ff6b6b);
-        }
-        
-        .contact {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s ease-out 0.4s both;
-        }
-        
-        .contact h2 {
-            color: white;
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-        
-        .contact p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-            
-            .products {
-                grid-template-columns: 1fr;
-            }
-            
-            .container {
-                padding: 15px;
-            }
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; }
+        input, textarea, button { margin: 5px; padding: 8px; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .card-item { border: 1px solid #ddd; margin: 10px 0; padding: 10px; }
+        .card-item img { width: 100px; height: auto; }
+        .result { background: #f8f9fa; padding: 10px; margin: 10px 0; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>TechShop</h1>
-            <p>สินค้าคุณภาพ ราคาดี ส่งฟรีทั่วไทย</p>
-        </header>
-        
-        <div class="products">
-            <div class="product-card">
-                <div class="product-image">📱</div>
-                <h3>สมาร์ทโฟน รุ่นใหม่</h3>
-                <p>หน้าจอ OLED ความละเอียดสูง กล้องคมชัด 108MP แบตเตอรี่ทนทาน พร้อมชาร์จไร้สาย</p>
-                <div class="price">฿15,990</div>
-                <button class="btn" onclick="buyProduct('สมาร์ทโฟน')">สั่งซื้อเลย</button>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">💻</div>
-                <h3>โน๊ตบุ๊คเกมมิ่ง</h3>
-                <p>CPU ความเร็วสูง การ์ดจอแรง RAM 16GB SSD 512GB เหมาะสำหรับเกมและงานหนัก</p>
-                <div class="price">฿35,990</div>
-                <button class="btn" onclick="buyProduct('โน๊ตบุ๊ค')">สั่งซื้อเลย</button>
-            </div>
-            
-            <div class="product-card">
-                <div class="product-image">🎧</div>
-                <h3>หูฟังไร้สาย Pro</h3>
-                <p>เสียงคุณภาพ Hi-Fi ตัดเสียงรบกวน เชื่อมต่อ Bluetooth 5.0 แบตเตอรี่ 30 ชั่วโมง</p>
-                <div class="price">฿4,590</div>
-                <button class="btn" onclick="buyProduct('หูฟัง')">สั่งซื้อเลย</button>
-            </div>
-        </div>
-        
-        <div class="contact">
-            <h2>ติดต่อสั่งซื้อ</h2>
-            <p>📞 โทร: 02-xxx-xxxx</p>
-            <p>📱 Line: @techshop</p>
-            <p>📧 Email: info@techshop.com</p>
-            <p>🚚 ส่งฟรีทั่วไทย สั่งวันนี้ส่งวันถัดไป!</p>
-        </div>
+    <h1>Card API Client</h1>
+
+    <!-- GET All Cards -->
+    <div class="section">
+        <h2>GET - ดึงการ์ดทั้งหมด</h2>
+        <button onclick="getAllCards()">ดึงการ์ดทั้งหมด</button>
+        <div id="allCards"></div>
     </div>
-    
+
+    <!-- GET Card by ID -->
+    <div class="section">
+        <h2>GET - ดึงการ์ดตาม ID</h2>
+        <input type="number" id="getCardId" placeholder="Card ID">
+        <button onclick="getCardById()">ดึงการ์ด</button>
+        <div id="singleCard"></div>
+    </div>
+
+    <!-- POST - Add New Card -->
+    <div class="section">
+        <h2>POST - เพิ่มการ์ดใหม่</h2>
+        <input type="text" id="newCardName" placeholder="ชื่อการ์ด"><br>
+        <input type="number" id="newCardPrice" placeholder="ราคา"><br>
+        <input type="url" id="newCardImage" placeholder="URL รูปภาพ"><br>
+        <textarea id="newCardDescription" placeholder="คำอธิบาย" rows="3" cols="50"></textarea><br>
+        <button onclick="addCard()">เพิ่มการ์ด</button>
+        <div id="addResult"></div>
+    </div>
+
+    <!-- PUT - Update Card -->
+    <div class="section">
+        <h2>PUT - แก้ไขการ์ด</h2>
+        <input type="number" id="updateCardId" placeholder="Card ID ที่จะแก้ไข"><br>
+        <input type="text" id="updateCardName" placeholder="ชื่อการ์ดใหม่"><br>
+        <input type="number" id="updateCardPrice" placeholder="ราคาใหม่"><br>
+        <input type="url" id="updateCardImage" placeholder="URL รูปภาพใหม่"><br>
+        <textarea id="updateCardDescription" placeholder="คำอธิบายใหม่" rows="3" cols="50"></textarea><br>
+        <button onclick="updateCard()">แก้ไขการ์ด</button>
+        <div id="updateResult"></div>
+    </div>
+
+    <!-- DELETE Card -->
+    <div class="section">
+        <h2>DELETE - ลบการ์ด</h2>
+        <input type="number" id="deleteCardId" placeholder="Card ID ที่จะลบ">
+        <button onclick="deleteCard()">ลบการ์ด</button>
+        <div id="deleteResult"></div>
+    </div>
+
     <script>
-        function buyProduct(productName) {
-            alert(`ขอบคุณที่สนใจ ${productName}! กรุณาติดต่อเราผ่านช่องทางที่ระบุด้านล่างเพื่อสั่งซื้อ`);
+        const API_BASE_URL = 'http://localhost:3003';
+
+        // GET - ดึงการ์ดทั้งหมด
+        async function getAllCards() {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/cards`);
+                const cards = response.data;
+                
+                let html = '<h3>รายการการ์ดทั้งหมด:</h3>';
+                cards.forEach(card => {
+                    html += `
+                        <div class="card-item">
+                            <h4>${card.name} (ID: ${card.id})</h4>
+                            <p>ราคา: ${card.price} บาท</p>
+                            <p>คำอธิบาย: ${card.description}</p>
+                            <img src="${card.image}" alt="${card.name}">
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('allCards').innerHTML = html;
+            } catch (error) {
+                document.getElementById('allCards').innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
         }
-        
-        // เพิ่มเอฟเฟกต์การ์ดลอยขึ้นลงเบาๆ
-        document.querySelectorAll('.product-card').forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.2}s`;
-        });
+
+        // GET - ดึงการ์ดตาม ID
+        async function getCardById() {
+            const id = document.getElementById('getCardId').value;
+            if (!id) {
+                alert('กรุณาใส่ Card ID');
+                return;
+            }
+
+            try {
+                const response = await axios.get(`${API_BASE_URL}/cards/${id}`);
+                const card = response.data;
+                
+                const html = `
+                    <div class="result">
+                        <h3>${card.name} (ID: ${card.id})</h3>
+                        <p>ราคา: ${card.price} บาท</p>
+                        <p>คำอธิบาย: ${card.description}</p>
+                        <img src="${card.image}" alt="${card.name}">
+                    </div>
+                `;
+                
+                document.getElementById('singleCard').innerHTML = html;
+            } catch (error) {
+                document.getElementById('singleCard').innerHTML = `<div class="result">Error: ${error.response?.data || error.message}</div>`;
+            }
+        }
+
+        // POST - เพิ่มการ์ดใหม่
+        async function addCard() {
+            const name = document.getElementById('newCardName').value;
+            const price = document.getElementById('newCardPrice').value;
+            const image = document.getElementById('newCardImage').value;
+            const description = document.getElementById('newCardDescription').value;
+
+            if (!name || !price || !image || !description) {
+                alert('กรุณากรอกข้อมูลให้ครบ');
+                return;
+            }
+
+            try {
+                const response = await axios.post(`${API_BASE_URL}/cards`, {
+                    name,
+                    price: parseInt(price),
+                    image,
+                    description
+                });
+
+                const newCard = response.data;
+                document.getElementById('addResult').innerHTML = `
+                    <div class="result">
+                        <h3>เพิ่มการ์ดสำเร็จ!</h3>
+                        <p>ID: ${newCard.id}</p>
+                        <p>ชื่อ: ${newCard.name}</p>
+                        <p>ราคา: ${newCard.price} บาท</p>
+                    </div>
+                `;
+
+                // ล้างฟอร์ม
+                document.getElementById('newCardName').value = '';
+                document.getElementById('newCardPrice').value = '';
+                document.getElementById('newCardImage').value = '';
+                document.getElementById('newCardDescription').value = '';
+            } catch (error) {
+                document.getElementById('addResult').innerHTML = `<div class="result">Error: ${error.message}</div>`;
+            }
+        }
+
+        // PUT - แก้ไขการ์ด
+        async function updateCard() {
+            const id = document.getElementById('updateCardId').value;
+            const name = document.getElementById('updateCardName').value;
+            const price = document.getElementById('updateCardPrice').value;
+            const image = document.getElementById('updateCardImage').value;
+            const description = document.getElementById('updateCardDescription').value;
+
+            if (!id) {
+                alert('กรุณาใส่ Card ID');
+                return;
+            }
+
+            const updateData = {};
+            if (name) updateData.name = name;
+            if (price) updateData.price = parseInt(price);
+            if (image) updateData.image = image;
+            if (description) updateData.description = description;
+
+            try {
+                const response = await axios.put(`${API_BASE_URL}/cards/${id}`, updateData);
+                const updatedCard = response.data;
+                
+                document.getElementById('updateResult').innerHTML = `
+                    <div class="result">
+                        <h3>แก้ไขการ์ดสำเร็จ!</h3>
+                        <p>ID: ${updatedCard.id}</p>
+                        <p>ชื่อ: ${updatedCard.name}</p>
+                        <p>ราคา: ${updatedCard.price} บาท</p>
+                        <p>คำอธิบาย: ${updatedCard.description}</p>
+                    </div>
+                `;
+
+                // ล้างฟอร์ม
+                document.getElementById('updateCardId').value = '';
+                document.getElementById('updateCardName').value = '';
+                document.getElementById('updateCardPrice').value = '';
+                document.getElementById('updateCardImage').value = '';
+                document.getElementById('updateCardDescription').value = '';
+            } catch (error) {
+                document.getElementById('updateResult').innerHTML = `<div class="result">Error: ${error.response?.data || error.message}</div>`;
+            }
+        }
+
+        // DELETE - ลบการ์ด
+        async function deleteCard() {
+            const id = document.getElementById('deleteCardId').value;
+            if (!id) {
+                alert('กรุณาใส่ Card ID');
+                return;
+            }
+
+            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบการ์ดนี้?')) {
+                return;
+            }
+
+            try {
+                const response = await axios.delete(`${API_BASE_URL}/cards/${id}`);
+                
+                document.getElementById('deleteResult').innerHTML = `
+                    <div class="result">
+                        <h3>ลบการ์ดสำเร็จ!</h3>
+                        <p>การ์ด ID ${id} ถูกลบแล้ว</p>
+                    </div>
+                `;
+
+                document.getElementById('deleteCardId').value = '';
+            } catch (error) {
+                document.getElementById('deleteResult').innerHTML = `<div class="result">Error: ${error.response?.data || error.message}</div>`;
+            }
+        }
+
+        // โหลดการ์ดทั้งหมดตอนเริ่มต้น
+        window.onload = function() {
+            getAllCards();
+        };
     </script>
 </body>
 </html>
