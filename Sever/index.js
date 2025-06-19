@@ -1,7 +1,10 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const PORT = 3003;
 
+// เพิ่ม CORS middleware
+app.use(cors());
 app.use(express.json());
 
 let cards = [
@@ -97,6 +100,11 @@ let cards = [
   },
 ];
 
+// ฟังก์ชันสำหรับหา ID ถัดไป
+function getNextId() {
+  return cards.length > 0 ? Math.max(...cards.map(card => card.id)) + 1 : 1;
+}
+
 // GET - ดึงรายการทั้งหมด
 app.get("/cards", (req, res) => {
   res.json(cards);
@@ -105,16 +113,29 @@ app.get("/cards", (req, res) => {
 // GET - ดึงตาม id
 app.get("/cards/:id", (req, res) => {
   const card = cards.find((c) => c.id === parseInt(req.params.id));
-  if (!card) return res.status(404).send("Card not found");
+  if (!card) return res.status(404).json({ error: "Card not found" });
   res.json(card);
 });
 
 // POST - เพิ่มการ์ดใหม่
 app.post("/cards", (req, res) => {
+  const { name, price, image, description } = req.body;
+  
+  // ตรวจสอบข้อมูลที่จำเป็น
+  if (!name || !price || !image || !description) {
+    return res.status(400).json({ 
+      error: "Missing required fields: name, price, image, description" 
+    });
+  }
+
   const newCard = {
-    id: cards.length + 1,
-    ...req.body,
+    id: getNextId(),
+    name,
+    price: parseInt(price),
+    image,
+    description
   };
+  
   cards.push(newCard);
   res.status(201).json(newCard);
 });
@@ -122,19 +143,35 @@ app.post("/cards", (req, res) => {
 // PUT - แก้ไขการ์ดตาม id
 app.put("/cards/:id", (req, res) => {
   const card = cards.find((c) => c.id === parseInt(req.params.id));
-  if (!card) return res.status(404).send("Card not found");
+  if (!card) return res.status(404).json({ error: "Card not found" });
 
-  Object.assign(card, req.body);
+  // อัพเดตเฉพาะฟิลด์ที่ส่งมา
+  if (req.body.name) card.name = req.body.name;
+  if (req.body.price) card.price = parseInt(req.body.price);
+  if (req.body.image) card.image = req.body.image;
+  if (req.body.description) card.description = req.body.description;
+
   res.json(card);
 });
 
 // DELETE - ลบการ์ด
 app.delete("/cards/:id", (req, res) => {
   const index = cards.findIndex((c) => c.id === parseInt(req.params.id));
-  if (index === -1) return res.status(404).send("Card not found");
+  if (index === -1) return res.status(404).json({ error: "Card not found" });
 
-  const deletedCard = cards.splice(index, 1);
-  res.json(deletedCard);
+  const deletedCard = cards.splice(index, 1)[0]; // เอาเฉพาะ object แรก
+  res.json({ message: "Card deleted successfully", deletedCard });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
 });
 
 app.listen(PORT, () => {
