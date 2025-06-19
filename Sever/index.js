@@ -1,4 +1,11 @@
-[
+const express = require('express');
+const app = express();
+const PORT = 3003;
+
+app.use(express.json());
+
+
+let cards = [
   {
     "id": 1,
     "name": "D-BT01-1",
@@ -79,3 +86,47 @@
     "description": "Nation/Clan : Dragon Empire, Keter Sanctuary, Stoicheia"
   },  
 ]
+
+// GET - ดึงรายการทั้งหมด
+app.get('/cards', (req, res) => {
+  res.json(cards);
+});
+
+// GET - ดึงตาม id
+app.get('/cards/:id', (req, res) => {
+  const card = cards.find(c => c.id === parseInt(req.params.id));
+  if (!card) return res.status(404).send('Card not found');
+  res.json(card);
+});
+
+// POST - เพิ่มการ์ดใหม่
+app.post('/cards', (req, res) => {
+  const newCard = {
+    id: cards.length + 1,
+    ...req.body
+  };
+  cards.push(newCard);
+  res.status(201).json(newCard);
+});
+
+// PUT - แก้ไขการ์ดตาม id
+app.put('/cards/:id', (req, res) => {
+  const card = cards.find(c => c.id === parseInt(req.params.id));
+  if (!card) return res.status(404).send('Card not found');
+
+  Object.assign(card, req.body);
+  res.json(card);
+});
+
+// DELETE - ลบการ์ด
+app.delete('/cards/:id', (req, res) => {
+  const index = cards.findIndex(c => c.id === parseInt(req.params.id));
+  if (index === -1) return res.status(404).send('Card not found');
+
+  const deletedCard = cards.splice(index, 1);
+  res.json(deletedCard);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
