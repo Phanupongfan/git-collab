@@ -7,7 +7,7 @@
 # Back-End by Techavit Srichainum  
 ```
 การใช้งาน Back-End
-npm init -y
-npm install exprass
+cd Server
+npm install
 node index.js
 ```
