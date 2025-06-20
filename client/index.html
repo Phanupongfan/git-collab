@@ -3,174 +3,606 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Card API Client</title>
+    <title>Card Manager - Vanguard Cards</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; }
-        input, textarea, button { margin: 5px; padding: 8px; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        .card-item { border: 1px solid #ddd; margin: 10px 0; padding: 10px; }
-        .card-item img { width: 100px; height: auto; }
-        .result { background: #f8f9fa; padding: 10px; margin: 10px 0; }
-    </style>
-</head>
-<body>
-    <h1>Card API Client</h1>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    <!-- GET All Cards -->
-    <div class="section">
-        <h2>GET - ดึงการ์ดทั้งหมด</h2>
-        <button onclick="getAllCards()">ดึงการ์ดทั้งหมด</button>
-        <div id="allCards"></div>
-    </div>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
 
-    <!-- GET Card by ID -->
-    <div class="section">
-        <h2>GET - ดึงการ์ดตาม ID</h2>
-        <input type="number" id="getCardId" placeholder="Card ID">
-        <button onclick="getCardById()">ดึงการ์ด</button>
-        <div id="singleCard"></div>
-    </div>
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    <!-- POST - Add New Card -->
-    <div class="section">
-        <h2>POST - เพิ่มการ์ดใหม่</h2>
-        <input type="text" id="newCardName" placeholder="ชื่อการ์ด"><br>
-        <input type="number" id="newCardPrice" placeholder="ราคา"><br>
-        <input type="url" id="newCardImage" placeholder="URL รูปภาพ"><br>
-        <textarea id="newCardDescription" placeholder="คำอธิบาย" rows="3" cols="50"></textarea><br>
-        <button onclick="addCard()">เพิ่มการ์ด</button>
-        <div id="addResult"></div>
-    </div>
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
 
-    <!-- PUT - Update Card -->
-    <div class="section">
-        <h2>PUT - แก้ไขการ์ด</h2>
-        <input type="number" id="updateCardId" placeholder="Card ID ที่จะแก้ไข"><br>
-        <input type="text" id="updateCardName" placeholder="ชื่อการ์ดใหม่"><br>
-        <input type="number" id="updateCardPrice" placeholder="ราคาใหม่"><br>
-        <input type="url" id="updateCardImage" placeholder="URL รูปภาพใหม่"><br>
-        <textarea id="updateCardDescription" placeholder="คำอธิบายใหม่" rows="3" cols="50"></textarea><br>
-        <button onclick="updateCard()">แก้ไขการ์ด</button>
-        <div id="updateResult"></div>
-    </div>
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
 
-    <!-- DELETE Card -->
-    <div class="section">
-        <h2>DELETE - ลบการ์ด</h2>
-        <input type="number" id="deleteCardId" placeholder="Card ID ที่จะลบ">
-        <button onclick="deleteCard()">ลบการ์ด</button>
-        <div id="deleteResult"></div>
-    </div>
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
 
-    <script>
-        const API_BASE_URL = 'http://localhost:3003';
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-        // GET - ดึงการ์ดทั้งหมด
-        async function getAllCards() {
-            try {
-                const response = await axios.get(`${API_BASE_URL}/cards`);
-                const cards = response.data;
-                
-                let html = '<h3>รายการการ์ดทั้งหมด:</h3>';
-                cards.forEach(card => {
-                    html += `
-                        <div class="card-item">
-                            <h4>${card.name} (ID: ${card.id})</h4>
-                            <p>ราคา: ${card.price} บาท</p>
-                            <p>คำอธิบาย: ${card.description}</p>
-                            <img src="${card.image}" alt="${card.name}">
-                        </div>
-                    `;
-                });
-                
-                document.getElementById('allCards').innerHTML = html;
-            } catch (error) {
-                document.getElementById('allCards').innerHTML = `<div class="result">Error: ${error.message}</div>`;
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-header i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: #667eea;
+        }
+
+        .section-header h2 {
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: -8px;
+            left: 15px;
+            background: #fff;
+            padding: 0 8px;
+            font-size: 0.9rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #f0f0f0;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .card-id {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-actions .btn {
+            flex: 1;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+        }
+
+        .toast.error {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
-        // GET - ดึงการ์ดตาม ID
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-magic"></i> Vanguard Card Manager</h1>
+            <p>จัดการคอลเลกชันการ์ด Cardfight!! Vanguard ของคุณ</p>
+        </div>
+
+        <!-- View All Cards -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-eye"></i>
+                <h2>ดูการ์ดทั้งหมด</h2>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="getAllCards()">
+                    <i class="fas fa-download"></i> โหลดการ์ดทั้งหมด
+                </button>
+                <button class="btn btn-warning" onclick="clearDisplay()">
+                    <i class="fas fa-trash"></i> ล้างหน้าจอ
+                </button>
+            </div>
+            <div id="allCards" class="cards-grid"></div>
+        </div>
+
+        <!-- Search Card -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-search"></i>
+                <h2>ค้นหาการ์ดตาม ID</h2>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>ID การ์ด</label>
+                    <input type="number" id="searchId" placeholder="กรอก ID ที่ต้องการค้นหา">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="getCardById()">
+                    <i class="fas fa-search"></i> ค้นหา
+                </button>
+            </div>
+            <div id="cardById" class="cards-grid"></div>
+        </div>
+
+        <!-- Add New Card -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-plus-circle"></i>
+                <h2>เพิ่มการ์ดใหม่</h2>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>ชื่อการ์ด</label>
+                    <input type="text" id="newName" placeholder="เช่น D-BT01-1">
+                </div>
+                <div class="input-group">
+                    <label>ราคา (บาท)</label>
+                    <input type="number" id="newPrice" placeholder="เช่น 190">
+                </div>
+                <div class="input-group">
+                    <label>URL รูปภาพ</label>
+                    <input type="url" id="newImage" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="input-group">
+                    <label>คำอธิบาย</label>
+                    <textarea id="newDescription" placeholder="Nation/Clan : ..." rows="3"></textarea>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="addCard()">
+                    <i class="fas fa-plus"></i> เพิ่มการ์ด
+                </button>
+                <button class="btn btn-warning" onclick="clearAddForm()">
+                    <i class="fas fa-eraser"></i> ล้างฟอร์ม
+                </button>
+            </div>
+        </div>
+
+        <!-- Update Card -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-edit"></i>
+                <h2>แก้ไขการ์ด</h2>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>ID ที่จะแก้ไข</label>
+                    <input type="number" id="updateId" placeholder="กรอก ID">
+                </div>
+                <div class="input-group">
+                    <label>ชื่อใหม่</label>
+                    <input type="text" id="updateName" placeholder="ชื่อการ์ดใหม่">
+                </div>
+                <div class="input-group">
+                    <label>ราคาใหม่</label>
+                    <input type="number" id="updatePrice" placeholder="ราคาใหม่">
+                </div>
+                <div class="input-group">
+                    <label>URL รูปใหม่</label>
+                    <input type="url" id="updateImage" placeholder="URL รูปภาพใหม่">
+                </div>
+                <div class="input-group">
+                    <label>คำอธิบายใหม่</label>
+                    <textarea id="updateDescription" placeholder="คำอธิบายใหม่" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-warning" onclick="updateCard()">
+                    <i class="fas fa-save"></i> อัพเดตการ์ด
+                </button>
+                <button class="btn btn-primary" onclick="loadCardForUpdate()">
+                    <i class="fas fa-download"></i> โหลดข้อมูลเดิม
+                </button>
+            </div>
+        </div>
+
+        <!-- Delete Card -->
+        <div class="section">
+            <div class="section-header">
+                <i class="fas fa-trash-alt"></i>
+                <h2>ลบการ์ด</h2>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>ID ที่จะลบ</label>
+                    <input type="number" id="deleteId" placeholder="กรอก ID ที่จะลบ">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-danger" onclick="deleteCard()">
+                    <i class="fas fa-trash"></i> ลบการ์ด
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-exclamation-triangle" style="color: #ff6b6b;"></i> ยืนยันการลบ</h2>
+            <p id="confirmMessage">คุณแน่ใจหรือไม่ที่จะลบการ์ดนี้?</p>
+            <div class="btn-group" style="margin-top: 20px; justify-content: flex-end;">
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fas fa-check"></i> ยืนยัน
+                </button>
+                <button class="btn btn-primary" onclick="closeModal()">
+                    <i class="fas fa-times"></i> ยกเลิก
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3003';
+        let deleteCardId = null;
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Modal functions
+        function showModal(message, cardId) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmModal').style.display = 'block';
+            deleteCardId = cardId;
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            deleteCardId = null;
+        }
+
+        // GET - ดูการ์ดทั้งหมด
+        async function getAllCards() {
+            try {
+                const response = await axios.get(`${API_URL}/cards`);
+                const cards = response.data;
+                displayCards(cards, 'allCards');
+                showToast(`โหลดการ์ดทั้งหมด ${cards.length} ใบสำเร็จ`);
+            } catch (error) {
+                showToast('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message, 'error');
+            }
+        }
+
+        // GET - ค้นหาการ์ดตาม ID
         async function getCardById() {
-            const id = document.getElementById('getCardId').value;
+            const id = document.getElementById('searchId').value;
             if (!id) {
-                alert('กรุณาใส่ Card ID');
+                showToast('กรุณากรอก ID ที่ต้องการค้นหา', 'error');
                 return;
             }
 
             try {
-                const response = await axios.get(`${API_BASE_URL}/cards/${id}`);
+                const response = await axios.get(`${API_URL}/cards/${id}`);
                 const card = response.data;
-                
-                const html = `
-                    <div class="result">
-                        <h3>${card.name} (ID: ${card.id})</h3>
-                        <p>ราคา: ${card.price} บาท</p>
-                        <p>คำอธิบาย: ${card.description}</p>
-                        <img src="${card.image}" alt="${card.name}">
-                    </div>
-                `;
-                
-                document.getElementById('singleCard').innerHTML = html;
+                displayCards([card], 'cardById');
+                showToast(`พบการ์ด: ${card.name}`);
             } catch (error) {
-                document.getElementById('singleCard').innerHTML = `<div class="result">Error: ${error.response?.data || error.message}</div>`;
+                document.getElementById('cardById').innerHTML = '<p style="text-align: center; color: #999;">ไม่พบการ์ด ID: ' + id + '</p>';
+                showToast('ไม่พบการ์ด ID: ' + id, 'error');
             }
         }
 
         // POST - เพิ่มการ์ดใหม่
         async function addCard() {
-            const name = document.getElementById('newCardName').value;
-            const price = document.getElementById('newCardPrice').value;
-            const image = document.getElementById('newCardImage').value;
-            const description = document.getElementById('newCardDescription').value;
+            const name = document.getElementById('newName').value;
+            const price = document.getElementById('newPrice').value;
+            const image = document.getElementById('newImage').value;
+            const description = document.getElementById('newDescription').value;
 
             if (!name || !price || !image || !description) {
-                alert('กรุณากรอกข้อมูลให้ครบ');
+                showToast('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'error');
                 return;
             }
 
             try {
-                const response = await axios.post(`${API_BASE_URL}/cards`, {
+                const response = await axios.post(`${API_URL}/cards`, {
                     name,
                     price: parseInt(price),
                     image,
                     description
                 });
 
-                const newCard = response.data;
-                document.getElementById('addResult').innerHTML = `
-                    <div class="result">
-                        <h3>เพิ่มการ์ดสำเร็จ!</h3>
-                        <p>ID: ${newCard.id}</p>
-                        <p>ชื่อ: ${newCard.name}</p>
-                        <p>ราคา: ${newCard.price} บาท</p>
-                    </div>
-                `;
-
-                // ล้างฟอร์ม
-                document.getElementById('newCardName').value = '';
-                document.getElementById('newCardPrice').value = '';
-                document.getElementById('newCardImage').value = '';
-                document.getElementById('newCardDescription').value = '';
+                showToast(`เพิ่มการ์ด "${response.data.name}" สำเร็จ! ID: ${response.data.id}`);
+                clearAddForm();
+                getAllCards(); // Refresh the list
             } catch (error) {
-                document.getElementById('addResult').innerHTML = `<div class="result">Error: ${error.message}</div>`;
+                showToast('เกิดข้อผิดพลาดในการเพิ่มการ์ด: ' + error.message, 'error');
             }
         }
 
         // PUT - แก้ไขการ์ด
         async function updateCard() {
-            const id = document.getElementById('updateCardId').value;
-            const name = document.getElementById('updateCardName').value;
-            const price = document.getElementById('updateCardPrice').value;
-            const image = document.getElementById('updateCardImage').value;
-            const description = document.getElementById('updateCardDescription').value;
-
+            const id = document.getElementById('updateId').value;
             if (!id) {
-                alert('กรุณาใส่ Card ID');
+                showToast('กรุณากรอก ID ที่จะแก้ไข', 'error');
                 return;
             }
+
+            const name = document.getElementById('updateName').value;
+            const price = document.getElementById('updatePrice').value;
+            const image = document.getElementById('updateImage').value;
+            const description = document.getElementById('updateDescription').value;
 
             const updateData = {};
             if (name) updateData.name = name;
@@ -178,63 +610,149 @@
             if (image) updateData.image = image;
             if (description) updateData.description = description;
 
-            try {
-                const response = await axios.put(`${API_BASE_URL}/cards/${id}`, updateData);
-                const updatedCard = response.data;
-                
-                document.getElementById('updateResult').innerHTML = `
-                    <div class="result">
-                        <h3>แก้ไขการ์ดสำเร็จ!</h3>
-                        <p>ID: ${updatedCard.id}</p>
-                        <p>ชื่อ: ${updatedCard.name}</p>
-                        <p>ราคา: ${updatedCard.price} บาท</p>
-                        <p>คำอธิบาย: ${updatedCard.description}</p>
-                    </div>
-                `;
+            if (Object.keys(updateData).length === 0) {
+                showToast('กรุณากรอกข้อมูลที่ต้องการแก้ไขอย่างน้อย 1 ช่อง', 'error');
+                return;
+            }
 
-                // ล้างฟอร์ม
-                document.getElementById('updateCardId').value = '';
-                document.getElementById('updateCardName').value = '';
-                document.getElementById('updateCardPrice').value = '';
-                document.getElementById('updateCardImage').value = '';
-                document.getElementById('updateCardDescription').value = '';
+            try {
+                const response = await axios.put(`${API_URL}/cards/${id}`, updateData);
+                showToast(`แก้ไขการ์ด "${response.data.name}" สำเร็จ`);
+                clearUpdateForm();
+                getAllCards(); // Refresh the list
             } catch (error) {
-                document.getElementById('updateResult').innerHTML = `<div class="result">Error: ${error.response?.data || error.message}</div>`;
+                showToast('ไม่พบการ์ด ID: ' + id, 'error');
+            }
+        }
+
+        // Load card data for update
+        async function loadCardForUpdate() {
+            const id = document.getElementById('updateId').value;
+            if (!id) {
+                showToast('กรุณากรอก ID ก่อน', 'error');
+                return;
+            }
+
+            try {
+                const response = await axios.get(`${API_URL}/cards/${id}`);
+                const card = response.data;
+                
+                document.getElementById('updateName').value = card.name;
+                document.getElementById('updatePrice').value = card.price;
+                document.getElementById('updateImage').value = card.image;
+                document.getElementById('updateDescription').value = card.description;
+                
+                showToast('โหลดข้อมูลการ์ดสำเร็จ');
+            } catch (error) {
+                showToast('ไม่พบการ์ด ID: ' + id, 'error');
             }
         }
 
         // DELETE - ลบการ์ด
         async function deleteCard() {
-            const id = document.getElementById('deleteCardId').value;
+            const id = document.getElementById('deleteId').value;
             if (!id) {
-                alert('กรุณาใส่ Card ID');
+                showToast('กรุณากรอก ID ที่จะลบ', 'error');
                 return;
             }
 
-            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบการ์ดนี้?')) {
-                return;
-            }
+            showModal(`คุณแน่ใจหรือไม่ที่จะลบการ์ด ID: ${id}?`, id);
+        }
 
+        async function confirmDelete() {
             try {
-                const response = await axios.delete(`${API_BASE_URL}/cards/${id}`);
-                
-                document.getElementById('deleteResult').innerHTML = `
-                    <div class="result">
-                        <h3>ลบการ์ดสำเร็จ!</h3>
-                        <p>การ์ด ID ${id} ถูกลบแล้ว</p>
-                    </div>
-                `;
-
-                document.getElementById('deleteCardId').value = '';
+                const response = await axios.delete(`${API_URL}/cards/${deleteCardId}`);
+                showToast(`ลบการ์ด "${response.data.deletedCard.name}" สำเร็จ`);
+                document.getElementById('deleteId').value = '';
+                closeModal();
+                getAllCards(); // Refresh the list
             } catch (error) {
-                document.getElementById('deleteResult').innerHTML = `<div class="result">Error: ${error.response?.data || error.message}</div>`;
+                showToast('ไม่พบการ์ด ID: ' + deleteCardId, 'error');
+                closeModal();
             }
         }
 
-        // โหลดการ์ดทั้งหมดตอนเริ่มต้น
-        window.onload = function() {
-            getAllCards();
-        };
+        // Display cards
+        function displayCards(cards, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (!cards || cards.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999; padding: 40px;">ไม่พบข้อมูลการ์ด</p>';
+                return;
+            }
+
+            container.innerHTML = cards.map(card => `
+                <div class="card">
+                    <div class="card-id">ID: ${card.id}</div>
+                    <img src="${card.image}" alt="${card.name}" class="card-image" 
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPjxpIGNsYXNzPSJmYXMgZmEtaW1hZ2UiPjwvaT48YnI+Tm8gSW1hZ2U8L3RleHQ+PC9zdmc+'">
+                    <div class="card-content">
+                        <div class="card-title">${card.name}</div>
+                        <div class="card-price">฿${card.price}</div>
+                        <div class="card-description">${card.description}</div>
+                        <div class="card-actions">
+                            <button class="btn btn-warning" onclick="editCard(${JSON.stringify(card).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-edit"></i> แก้ไข
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteCardById(${card.id})">
+                                <i class="fas fa-trash"></i> ลบ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit card from card display
+        function editCard(card) {
+            document.getElementById('updateId').value = card.id;
+            document.getElementById('updateName').value = card.name;
+            document.getElementById('updatePrice').value = card.price;
+            document.getElementById('updateImage').value = card.image;
+            document.getElementById('updateDescription').value = card.description;
+            
+            // Scroll to update section
+            document.querySelector('.section:nth-child(5)').scrollIntoView({ behavior: 'smooth' });
+            showToast('ข้อมูลการ์ดถูกโหลดในฟอร์มแก้ไขแล้ว');
+        }
+
+        // Delete card from card display
+        function deleteCardById(id) {
+            showModal(`คุณแน่ใจหรือไม่ที่จะลบการ์ด ID: ${id}?`, id);
+        }
+
+        // Clear functions
+        function clearDisplay() {
+            document.getElementById('allCards').innerHTML = '';
+            document.getElementById('cardById').innerHTML = '';
+            showToast('ล้างหน้าจอแล้ว');
+        }
+
+        function clearAddForm() {
+            document.getElementById('newName').value = '';
+            document.getElementById('newPrice').value = '';
+            document.getElementById('newImage').value = '';
+            document.getElementById('newDescription').value = '';
+        }
+
+        function clearUpdateForm() {
+            document.getElementById('updateId').value = '';
+            document.getElementById('updateName').value = '';
+            document.getElementById('updatePrice').value = '';
+            document.getElementById('updateImage').value = '';
+            document.getElementById('updateDescription').value = '';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Load all cards on page load
+        window.addEventListener('load', getAllCards);
     </script>
 </body>
 </html>
